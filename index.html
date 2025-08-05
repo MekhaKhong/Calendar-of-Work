@@ -76,7 +76,18 @@
       user-select: text !important;
       pointer-events: auto !important;
     }
-
+	  
+	/* ปรับสีและขนาดหัววัน */
+    .fc-col-header-cell {
+      background-color: #007acc;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+      font-size: 1rem;
+      padding: 8px 0;
+      border: 1px solid #e0e0e0;
+    }
+	  
     .fc-event-main,
     .fc-event-title,
     .fc-event-time,
@@ -87,7 +98,7 @@
     }
 	.fc .fc-list {
 		font-size: 12px;
-	}
+    }
 
     /* ✅ Word Wrap ข้อความยาว */
     .fc-event-title,
@@ -137,15 +148,17 @@
           cachedEvents = events;
 
           const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: window.innerWidth < 600 ? "listWeek" : "dayGridMonth",
-            locale: "th",
-            timeZone: "local",
-            height: "100vh",
+            initialView: window.innerWidth < 600 ? 'listWeek' : 'dayGridMonth',
+            locale: 'th',
+            timeZone: 'local',
+            height: '100vh',
             fixedWeekCount: true,
+            dayHeaders: true,
+            dayHeaderFormat: { weekday: 'long' }, // ชื่อวันเต็ม
             headerToolbar: {
-              left: "prev,next today",
-              center: "title",
-              right: "dayGridMonth,listWeek",
+              left: 'prev,next today',
+              center: 'title',
+              right: 'dayGridMonth,listWeek'
             },
             events: events,
             eventClick: function (info) {
@@ -206,6 +219,7 @@
    <button id="exportBtn">📥 Export Excel</button>
 </body>
 </html>
+
 
 
 
