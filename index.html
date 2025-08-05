@@ -131,6 +131,28 @@
 		height: auto !important;      /* ให้ปุ่มยืดตามเนื้อหา */
 		line-height: 1.2 !important;
 	}
+	  /* ปลดล็อกการ Copy ใน cell และข้อความภายในปฏิทินทั้งหมด */
+	.fc-daygrid-day,
+	.fc-daygrid-day-frame,
+	.fc-daygrid-day-top,
+	.fc-daygrid-day-number,
+	.fc-daygrid-event,
+	.fc-event-title,
+	.fc-event-main {
+  		user-select: text !important;
+  		-webkit-user-select: text !important;
+  		-moz-user-select: text !important;
+  		-ms-user-select: text !important;
+ 		pointer-events: auto !important;
+  		cursor: text !important;
+	}
+
+	/* ปิด drag & drop เพื่อไม่ให้บังการเลือกข้อความ */
+	.fc-event {
+  		pointer-events: auto !important;
+  		user-select: text !important;
+	}
+
   </style>
 </head>
 <body>
@@ -219,6 +241,7 @@
    <button id="exportBtn">📥 Export Excel</button>
 </body>
 </html>
+
 
 
 
