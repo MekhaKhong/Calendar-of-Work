@@ -186,17 +186,20 @@
             eventClick: function (info) {
               info.jsEvent.preventDefault();
             },
-            eventDidMount: function (info) {
-              	const el = info.el;
-	  	const titleEl = el.querySelector('.fc-event-title');
-  		if (titleEl) {
+		eventDidMount: function (info) {
+  		const el = info.el;
+
+  		// ✅ Render HTML in title
+  		const titleEl = el.querySelector('.fc-event-title');
+ 		 if (titleEl) {
     			titleEl.innerHTML = info.event.title;  // แสดง HTML จาก title
   		}
 
-  		el.setAttribute('draggable', 'false');
-  		el.style.userSelect = 'text';
-  		el.style.pointerEvents = 'auto';
-		}
+  el.setAttribute('draggable', 'false');
+  el.style.userSelect = 'text';
+  el.style.pointerEvents = 'auto';
+}
+
             },
           });
 
@@ -240,6 +243,7 @@
    <button id="exportBtn">📥 Export Excel</button>
 </body>
 </html>
+
 
 
 
