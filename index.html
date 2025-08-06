@@ -191,13 +191,21 @@
               el.setAttribute("draggable", "false");
               el.style.userSelect = "text";
               el.style.pointerEvents = "auto";
-
               const mainEl = el.querySelector(".fc-event-main");
               if (mainEl) {
                 mainEl.style.userSelect = "text";
                 mainEl.style.pointerEvents = "auto";
                 mainEl.style.cursor = "text";
               }
+	  	const titleEl = el.querySelector('.fc-event-title');
+  		if (titleEl) {
+    			titleEl.innerHTML = info.event.title;  // แสดง HTML จาก title
+  		}
+
+  		el.setAttribute('draggable', 'false');
+  		el.style.userSelect = 'text';
+  		el.style.pointerEvents = 'auto';
+		}
             },
           });
 
@@ -241,6 +249,7 @@
    <button id="exportBtn">📥 Export Excel</button>
 </body>
 </html>
+
 
 
 
