@@ -1,197 +1,46 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>📅 ตารางงาน</title>
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background: #fcf7f7;
-      user-select: text;
-    }
-
-    #calendar {
-      width: 100%;
-      height: 100vh;
-      background: white;
-    }
-
-    .fc-toolbar-title {
-      font-size: 1.25rem !important;
-    }
-
-    .fc .fc-button {
-      font-size: 0.7rem !important;
-      padding: 2px 6px !important;
-      height: auto !important;
-      line-height: 1.2 !important;
-    }
-
-    .fc-col-header-cell {
-      background-color: #007acc;
-      color: white;
-      font-weight: bold;
-      text-align: center;
-      font-size: 1rem;
-      padding: 8px 0;
-      border: 1px solid #e0e0e0;
-    }
-
-    .fc-col-header-cell:nth-child(1),
-    .fc-col-header-cell:nth-child(7) {
-      background-color: #d32f2f;
-    }
-
-    .fc-daygrid-day-frame {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      height: 100%;
-      font-size: 0.7rem;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-    }
-
-    .fc-daygrid-day-events {
-      flex: 1 1 auto;
-      overflow-y: auto;
-    }
-
-    .fc-event {
-      font-size: 0.7rem !important;
-      white-space: normal !important;
-      user-select: text !important;
-    }
-
-    .fc-list,
-    .fc-list-event-title,
-    .fc-list-event-time {
-      font-size: 0.75rem;
-    }
-
-    #exportBtn {
-      margin: 8px;
-      padding: 4px 8px;
-      font-size: 0.75rem;
-      cursor: pointer;
-    }
-
-    /* ปลดล็อกการ Copy */
-    .fc-daygrid-day,
-    .fc-daygrid-day-frame,
-    .fc-daygrid-day-top,
-    .fc-daygrid-day-number,
-    .fc-daygrid-event,
-    .fc-event-title,
-    .fc-event-main {
-      user-select: text !important;
-      pointer-events: auto !important;
-      cursor: text !important;
-    }
-
-    .fc-event {
-      pointer-events: auto !important;
-      user-select: text !important;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>ตารางงาน</title>
+<style>
+    body { font-family: sans-serif; padding: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #f0f0f0; }
+</style>
 </head>
 <body>
 
-  <div id="calendar"></div>
+<h2>ตารางงาน</h2>
+<table id="dataTable">
+    <thead></thead>
+    <tbody></tbody>
+</table>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const calendarEl = document.getElementById('calendar');
-      const exportBtn = document.getElementById('exportBtn');
+<script>
+// ใส่ลิงก์ API ของคุณตรงนี้
+const sheetUrl = "https://script.google.com/macros/s/AKfycbwvCwxQgh-YE3lm2i8yHGB5MExaWutR5-lWOStvZQNgDiQ0Tue6dYp_hMPyf4JYRL2sgg/exec";
 
-      fetch("https://script.google.com/macros/s/AKfycbwqBczxoOp_j9HtJEAhNJGGvsYKqRVRXpMmBJhPnZ7Wv8ldnl5maw-doif07seOFg3GAw/exec")
-        .then(response => response.json())
-        .then(events => {
-          const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: window.innerWidth < 600 ? 'listWeek' : 'dayGridMonth',
-            locale: 'th',
-            timeZone: 'local',
-            height: '100vh',
-            fixedWeekCount: true,
-            dayHeaders: true,
-            dayHeaderFormat: { weekday: 'long' },
-            headerToolbar: {
-              left: 'prev,next today',
-              center: 'title',
-              right: 'dayGridMonth,listWeek'
-            },
+fetch(sheetUrl)
+  .then(res => res.json())
+  .then(data => {
+    if (!data.length) return;
 
-            // ✅ ใช้ eventContent เพื่อรองรับ HTML ใน title
-            eventContent: function (arg) {
-              const divEl = document.createElement('div');
-              divEl.innerHTML = arg.event.title;
-              return { domNodes: [divEl] };
-            },
+    const tableHead = document.querySelector("#dataTable thead");
+    const tableBody = document.querySelector("#dataTable tbody");
 
-            events: events,
+    // หัวตาราง
+    const headers = Object.keys(data[0]);
+    tableHead.innerHTML = "<tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
 
-            eventClick: function (info) {
-              info.jsEvent.preventDefault();
-            },
+    // เนื้อหา
+    tableBody.innerHTML = data.map(row =>
+      "<tr>" + headers.map(h => `<td>${row[h]}</td>`).join("") + "</tr>"
+    ).join("");
+  })
+  .catch(err => console.error("Error:", err));
+</script>
 
-            eventDidMount: function (info) {
-              const el = info.el;
-              el.setAttribute('draggable', 'false');
-              el.style.userSelect = 'text';
-              el.style.pointerEvents = 'auto';
-
-              const mainEl = el.querySelector('.fc-event-main');
-              if (mainEl) {
-                mainEl.style.userSelect = 'text';
-                mainEl.style.pointerEvents = 'auto';
-                mainEl.style.cursor = 'text';
-              }
-            }
-          });
-
-          calendar.render();
-
-          // ✅ เพิ่มลิงก์หลังหัวข้อเดือน-ปี
-          setTimeout(() => {
-            const titleEl = document.querySelector('.fc-toolbar-title');
-            if (titleEl && !titleEl.querySelector('a')) {
-              const link = document.createElement('a');
-              link.href = "https://docs.google.com/spreadsheets/d/1_qWz08XrhW9o1L-uz3utLjRksfV3pOsvBNsSus0httw/edit?usp=sharing";
-              link.target = "_blank";
-              link.textContent = " 🔗";
-              link.style.marginLeft = "3px";
-              link.style.textDecoration = "none";
-              link.title = "ไปยังลิงก์เพิ่มเติม";
-              titleEl.appendChild(link);
-            }
-          }, 0);
-
-          // ✅ Export to Excel
-          exportBtn.addEventListener('click', () => {
-            const data = events.map(e => ({
-              วันที่: e.start,
-              ชื่อกิจกรรม: e.title.replace(/<[^>]*>/g, ''), // ลบ HTML tag
-              รายละเอียด: e.description || '',
-              หมวดหมู่: e.category || ''
-            }));
-            const worksheet = XLSX.utils.json_to_sheet(data);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "กิจกรรม");
-            XLSX.writeFile(workbook, "ตารางกิจกรรม.xlsx");
-          });
-        });
-    });
-  </script>
-  <button id="exportBtn">📥 Export Excel</button>
 </body>
 </html>
