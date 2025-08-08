@@ -20,7 +20,7 @@
 
 <script>
 // ใส่ลิงก์ API ของคุณตรงนี้
-const sheetUrl = "https://script.google.com/macros/s/AKfycbyOtlug6Ik17HZim5wWVPHYDkM-9pec7fFjmAwQ91NHoRdM7kIFm_OlX5qtpfFKcuDbsA/exec";
+const sheetUrl = "https://script.google.com/macros/s/AKfycbx2W3F-RGDdeK168kpFhmkRvQgWJGIQMFQzI782BXQrJuSkxAA2rwgJ7ruG_kalWepE3w/exec";
 
 fetch(sheetUrl)
   .then(res => res.json())
@@ -30,13 +30,16 @@ fetch(sheetUrl)
     const tableHead = document.querySelector("#dataTable thead");
     const tableBody = document.querySelector("#dataTable tbody");
 
-    // หัวตาราง
-    const headers = Object.keys(data[0]);
+    // ใช้แถวแรกของ data เป็นหัวตาราง
+    const headers = data[0];
+    const rows = data.slice(1);
+
+    // สร้างหัวตาราง
     tableHead.innerHTML = "<tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
 
-    // เนื้อหา
-    tableBody.innerHTML = data.map(row =>
-      "<tr>" + headers.map(h => `<td>${row[h]}</td>`).join("") + "</tr>"
+    // สร้างแถวข้อมูล
+    tableBody.innerHTML = rows.map(row =>
+      "<tr>" + row.map(cell => `<td>${cell}</td>`).join("") + "</tr>"
     ).join("");
   })
   .catch(err => console.error("Error:", err));
@@ -44,4 +47,3 @@ fetch(sheetUrl)
 
 </body>
 </html>
-
